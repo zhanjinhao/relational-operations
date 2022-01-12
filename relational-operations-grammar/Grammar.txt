@@ -1,0 +1,74 @@
+StatementParser
+whereSeg             ->  "where" logic
+logic                ->  condition (("or" | "and") condition)*
+condition            ->  comparison
+comparison           ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains") binaryArithmetic)?
+binaryArithmetic     ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+unaryArithmetic      ->  ("!"|"-") unaryArithmetic | primary
+primary              ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | timeInterval
+function             ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+timeInterval         ->  "interval" NUMBER IDENTIFIER
+timeUnit             ->  IDENTIFIER "from" primary
+assignmentList       ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
+
+SelectParser
+select               ->  singleSelect (("union" | "minus" | "intersect" | "except") singleSelect)*
+singleSelect         ->  columnSeg tableSeg (whereSeg)? (groupBySeg)? (orderBySeg)? (limitSeg)?
+columnSeg            ->  "select" ("distinct" | "first" | "last")? columnRep ("," columnRep)*
+columnRep            ->  (* | binaryArithmetic) ("as" IDENTIFIER)?
+tableSeg             ->  "from" tableRep (("left" | "right" | "full" | "cross")? ("inner" | "outer")? ("join" | ",") tableRep ("on" logic)?)*
+# tableRep             ->  ("(" singleSelect ")" | IDENTIFIER)? ("as")? IDENTIFIER
+tableRep             ->  ("(" select ")" | IDENTIFIER)? ("as")? IDENTIFIER
+whereSeg ↑           ->  "where" logic
+groupBySeg           ->  "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
+orderBySeg           ->  "order" "by" IDENTIFIER ("desc" | "asc") ("," IDENTIFIER ("desc" | "asc"))*
+limitSeg             ->  "limit" number ("," number)?
+logic ↑              ->  condition (("or" | "and") condition)*
+condition ↑+         ->  inCondition | existsCondition | comparison
+# inCondition          ->  IDENTIFIER ("not")? "in" "(" (singleSelect | (primary (, primary)*) ")"
+inCondition          ->  IDENTIFIER ("not")? "in" "(" (select | (primary (, primary)*) ")"
+# existsCondition      ->  ("not")? "exists" "(" singleSelect ")"
+existsCondition      ->  ("not")? "exists" "(" select ")"
+comparison ↑         ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains") binaryArithmetic)?
+binaryArithmetic ↑   ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+unaryArithmetic ↑    ->  ("!"|"-") unaryArithmetic | primary
+primary ↑+           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | "(" singleSelect ")" | "(" logic ")" | groupFunction
+function ↑           ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+groupFunction        ->  ("avg" | "max" | "min" | "count" | "sum" | "flat") "(" IDENTIFIER ")"
+
+InsertParser
+insert               ->  "insert" (constrict)? "into" IDENTIFIER (((insertValuesRep | insertSetRep) onDuplicateKey?) | (insertSelectRep))
+constrict            ->  ignore
+insertValuesRep            ->  ("(" IDENTIFIER (, IDENTIFIER)* ")")? "values" ("(" binaryArithmetic (, binaryArithmetic)* ")") ("," "(" binaryArithmetic (, binaryArithmetic)* ")")*
+insertSetRep         ->  "set" assignmentList
+insertSelectRep      ->  ("(" IDENTIFIER (, IDENTIFIER)* ")")? select
+binaryArithmetic ↑   ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+unaryArithmetic ↑    ->  ("!"|"-") unaryArithmetic | primary
+primary ↑+           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | "(" binaryArithmetic ")"
+function ↑           ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+onDuplicateKey       ->  "on" "duplicate" "key" "update" assignmentList
+assignmentList ↑     ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
+
+DeleteParser
+delete               ->  "delete" "from" IDENTIFIER whereSeg
+whereSeg ↑           ->  "where" logic
+logic ↑              ->  condition (("or" | "and") condition)*
+condition ↑          ->  comparison
+comparison ↑         ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains") binaryArithmetic)?
+binaryArithmetic ↑   ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+unaryArithmetic ↑    ->  ("!"|"-") unaryArithmetic | primary
+primary ↑+           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | "(" logic ")"
+function ↑           ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+
+UpdateParser
+update               ->  "update" IDENTIFIER "set" assignmentList whereSeg
+assignmentList ↑     ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
+whereSeg ↑           ->  "where" logic
+logic ↑              ->  condition (("or" | "and") condition)*
+condition ↑          ->  comparison
+comparison ↑         ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=" | "like" | "contains") binaryArithmetic)?
+binaryArithmetic ↑   ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
+unaryArithmetic ↑    ->  ("!"|"-") unaryArithmetic | primary
+primary ↑+           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | function | "(" logic ")"
+function ↑           ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
+
