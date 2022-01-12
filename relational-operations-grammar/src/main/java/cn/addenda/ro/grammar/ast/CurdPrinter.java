@@ -101,7 +101,7 @@ public class CurdPrinter implements CurdVisitor<String> {
 
         List<Curd> columnRepList = columnSeg.getColumnRepList();
         sb.append(columnRepList.stream().map(item -> item.accept(this))
-                .collect(Collectors.joining(", ")));
+            .collect(Collectors.joining(", ")));
         return sb.toString();
     }
 
@@ -196,8 +196,8 @@ public class CurdPrinter implements CurdVisitor<String> {
             List<Curd> range = inCondition.getRange();
             if (range != null && !range.isEmpty()) {
                 sb.append(range.stream()
-                        .map(item -> item.accept(this))
-                        .collect(Collectors.joining("," + BLANK)));
+                    .map(item -> item.accept(this))
+                    .collect(Collectors.joining("," + BLANK)));
             }
             sb.append(")");
         }
@@ -225,8 +225,8 @@ public class CurdPrinter implements CurdVisitor<String> {
         List<Token> columnList = groupBySeg.getColumnList();
         if (columnList != null && !columnList.isEmpty()) {
             sb.append(columnList.stream()
-                    .map(item -> item.getLiteral().toString())
-                    .collect(Collectors.joining(", ")));
+                .map(item -> item.getLiteral().toString())
+                .collect(Collectors.joining(", ")));
         }
         Curd having = groupBySeg.getHaving();
         if (having != null) {
@@ -300,7 +300,7 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitUnaryArithmetic(UnaryArithmetic unaryArithmetic) {
         return unaryArithmetic.getOperator().getLiteral() +
-                unaryArithmetic.getCurd().accept(this);
+            unaryArithmetic.getCurd().accept(this);
     }
 
     @Override
@@ -322,9 +322,9 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitGroupFunction(GroupFunction groupFunction) {
         return groupFunction.getMethod().getLiteral() +
-                "(" + BLANK +
-                groupFunction.getCurd().accept(this) +
-                BLANK + ")";
+            "(" + BLANK +
+            groupFunction.getCurd().accept(this) +
+            BLANK + ")";
     }
 
     @Override
@@ -339,7 +339,7 @@ public class CurdPrinter implements CurdVisitor<String> {
             Curd condition = conditionList.get(i);
             Curd result = resultList.get(i);
             sb.append(BLANK).append("when").append(BLANK).append(condition.accept(this))
-                    .append(BLANK).append("then").append(BLANK).append(result.accept(this));
+                .append(BLANK).append("then").append(BLANK).append(result.accept(this));
         }
 
         Curd defaultValue = caseWhen.getDefaultValue();
@@ -388,8 +388,8 @@ public class CurdPrinter implements CurdVisitor<String> {
 
         List<List<Curd>> curdStatementsList = insertValuesRep.getCurdListList();
         String collect = curdStatementsList.stream()
-                .map(i -> i.stream().map(j -> j.accept(this)).collect(Collectors.joining(", ", " ( ", " ) ")))
-                .collect(Collectors.joining(", "));
+            .map(i -> i.stream().map(j -> j.accept(this)).collect(Collectors.joining(", ", " ( ", " ) ")))
+            .collect(Collectors.joining(", "));
 
         sb.append(collect);
 
@@ -436,8 +436,8 @@ public class CurdPrinter implements CurdVisitor<String> {
     @Override
     public String visitAssignmentList(AssignmentList assignmentList) {
         return assignmentList.getEntryList().stream()
-                .map(item -> item.getColumnName().getLiteral() + "=" + item.getValue().accept(this))
-                .collect(Collectors.joining(", "));
+            .map(item -> item.getColumnName().getLiteral() + "=" + item.getValue().accept(this))
+            .collect(Collectors.joining(", "));
     }
 
     @Override
@@ -487,17 +487,25 @@ public class CurdPrinter implements CurdVisitor<String> {
 
     @Override
     public String visitUpdate(Update update) {
-        return "update" + BLANK +
-                update.getTableName().getLiteral() +
-                BLANK + "set" + BLANK + update.getAssignmentList().accept(this) +
-                update.getWhereSeg().accept(this);
+        String str = "update" + BLANK +
+            update.getTableName().getLiteral() +
+            BLANK + "set" + BLANK + update.getAssignmentList().accept(this);
+        Curd whereSeg = update.getWhereSeg();
+        if (whereSeg == null) {
+            return str;
+        }
+        return str + BLANK + whereSeg.accept(this);
     }
 
     @Override
     public String visitDelete(Delete delete) {
         Token tableName = delete.getTableName();
         Curd whereSeg = delete.getWhereSeg();
-        return "delete" + BLANK + "from" + BLANK + tableName.getLiteral() + BLANK + whereSeg.accept(this);
+        String str = "delete" + BLANK + "from" + BLANK + tableName.getLiteral();
+        if (whereSeg != null) {
+            return str + BLANK + whereSeg.accept(this);
+        }
+        return str;
     }
 
     private String blankStr() {

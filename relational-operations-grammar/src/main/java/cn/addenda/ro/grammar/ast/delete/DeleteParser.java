@@ -48,9 +48,12 @@ public class DeleteParser extends StatementParser {
         }
         tokenSequence.advance();
 
-        Curd whereSeg = whereSeg();
-
-        return new Delete(tableName, whereSeg);
+        Token token = tokenSequence.takeCur();
+        if (TokenType.WHERE.equals(token.getType())) {
+            Curd whereSeg = whereSeg();
+            return new Delete(tableName, whereSeg);
+        }
+        return new Delete(tableName, null);
     }
 
 }

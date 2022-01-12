@@ -13,7 +13,9 @@ public class UpdateParserTest {
 
     static String[] sqls = new String[]{
 
-            "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
+        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python') where runoob_id = 3",
+
+        "update runoob_tbl set runoob_title = replace(runoob_title, 'c++', 'python')"
 
     };
 

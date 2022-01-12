@@ -61,9 +61,12 @@ public class UpdateParser extends StatementParser {
             }
         }
 
-        Curd whereSeg = whereSeg();
-
-        return new Update(tableName, curd, whereSeg);
+        Token token = tokenSequence.takeCur();
+        if (TokenType.WHERE.equals(token.getType())) {
+            Curd whereSeg = whereSeg();
+            return new Update(tableName, curd, whereSeg);
+        }
+        return new Update(tableName, curd, null);
     }
 
 }

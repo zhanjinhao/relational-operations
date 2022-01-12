@@ -15,6 +15,7 @@ public class DeleteParserTest {
             "delete from score where CREATE_TM < now()",
             "delete from score where DEGREE + 1 < 60 - 1",
             "delete from score where CREATE_TM < now() and DEGREE + 1 < 60 - 1",
+            "delete from score"
     };
 
     public static void main(String[] args) {

@@ -27,9 +27,7 @@ public class UpdateGrammarValidator extends UpdateVisitorWithDelegate<Void> {
         }
 
         Curd whereSeg = update.getWhereSeg();
-        if (whereSeg == null) {
-            error(AstROErrorReporterDelegate.UPDATE_update_VALIDATION);
-        } else {
+        if (whereSeg != null) {
             whereSeg.accept(this);
         }
         return null;

@@ -63,7 +63,7 @@ assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" 
 columnList ↑	    ->  IDENTIFIER ("," IDENTIFIER)*
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DeleteParser
-delete              ->  "delete" "from" IDENTIFIER whereSeg
+delete              ->  "delete" "from" IDENTIFIER (whereSeg)?
 whereSeg ↑          ->  "where" logic
 logic ↑             ->  condition (("or" | "and") condition)*
 condition ↑         ->  comparison
@@ -74,7 +74,7 @@ primary ↑           ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRI
 function ↑          ->  functionName "(" binaryArithmetic? ("," binaryArithmetic)* ")"
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 UpdateParser
-update              ->  "update" IDENTIFIER "set" assignmentList whereSeg
+update              ->  "update" IDENTIFIER "set" assignmentList (whereSeg)?
 assignmentList ↑    ->  (IDENTIFIER "=" binaryArithmetic) ("," IDENTIFIER "=" binaryArithmetic)*
 whereSeg ↑          ->  "where" logic
 logic ↑             ->  condition (("or" | "and") condition)*
