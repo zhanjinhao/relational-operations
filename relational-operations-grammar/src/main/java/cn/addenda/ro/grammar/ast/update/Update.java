@@ -3,15 +3,12 @@ package cn.addenda.ro.grammar.ast.update;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.ast.statement.Curd;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.update.visitor.UpdateMetaInfo;
 
 /**
  * @author 01395265
  * @date 2021/4/6
  */
 public class Update extends Curd {
-
-    private UpdateMetaInfo updateMetaInfo;
 
     private Token tableName;
 
@@ -42,7 +39,4 @@ public class Update extends Curd {
         return whereSeg;
     }
 
-    public void setSingleUpdateMetaInfo(UpdateMetaInfo updateMetaInfo) {
-        this.updateMetaInfo = updateMetaInfo;
-    }
 }

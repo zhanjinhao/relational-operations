@@ -3,7 +3,6 @@ package cn.addenda.ro.grammar.ast.create;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.ast.statement.Curd;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.create.visitor.InsertMetaInfo;
 
 /**
  * @Author ISJINHAO
@@ -12,8 +11,6 @@ import cn.addenda.ro.grammar.ast.create.visitor.InsertMetaInfo;
 public class Insert extends Curd {
 
     private InsertType insertType;
-
-    private InsertMetaInfo insertMetaInfo;
 
     // ignore?
     private Token constrict;
@@ -51,14 +48,6 @@ public class Insert extends Curd {
 
     public Curd getOnDuplicateUpdate() {
         return onDuplicateUpdate;
-    }
-
-    public InsertMetaInfo getSingleInsertMetaInfo() {
-        return insertMetaInfo;
-    }
-
-    public void setSingleInsertMetaInfo(InsertMetaInfo insertMetaInfo) {
-        this.insertMetaInfo = insertMetaInfo;
     }
 
     public Token getTableName() {

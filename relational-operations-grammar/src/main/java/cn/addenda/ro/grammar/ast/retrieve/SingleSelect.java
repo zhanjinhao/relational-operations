@@ -1,17 +1,13 @@
 package cn.addenda.ro.grammar.ast.retrieve;
 
-
 import cn.addenda.ro.grammar.ast.statement.Curd;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.retrieve.visitor.SingleSelectMetaInfo;
 
 /**
  * @author 01395265
  * @date 2021/3/3
  */
 public class SingleSelect extends Curd {
-
-    private SingleSelectMetaInfo singleSelectMetaInfo;
 
     private SingleSelectType singleSelectType = SingleSelectType.UNDETERMINED;
 
@@ -87,10 +83,4 @@ public class SingleSelect extends Curd {
         return limitSeg;
     }
 
-    public void setAstMetaInfo(SingleSelectMetaInfo singleSelectMetaInfo) {
-        this.singleSelectMetaInfo = singleSelectMetaInfo;
-    }
-    public SingleSelectMetaInfo getSingleSelectAstMetaInfo() {
-        return singleSelectMetaInfo;
-    }
 }

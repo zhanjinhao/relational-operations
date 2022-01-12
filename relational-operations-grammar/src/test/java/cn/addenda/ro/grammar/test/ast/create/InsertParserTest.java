@@ -31,7 +31,7 @@ public class InsertParserTest {
             "insert ignore into score set SNO = '1387398', CNO = #{cno}, DEGREE = ?",
 
             "insert into table_listnames (name, address, tele) " +
-                    "select * from (select 'rupert', 'somewhere', '022' from dual) as tmp " +
+                    "select * from (select 'rupert', 'somewhere', '022' from dual) tmp " +
                     "where not exists ( " +
                     "    select name from table_listnames where name = 'rupert' " +
                     ") limit 1"

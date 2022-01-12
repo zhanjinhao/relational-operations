@@ -2,7 +2,6 @@ package cn.addenda.ro.grammar.ast.delete;
 
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.ast.statement.Curd;
-import cn.addenda.ro.grammar.ast.delete.visitor.DeleteMetaInfo;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 
 /**
@@ -10,8 +9,6 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
  * @Date 2021/4/8 20:38
  */
 public class Delete extends Curd {
-
-    private DeleteMetaInfo deleteMetaInfo;
 
     private Token tableName;
 
@@ -35,7 +32,4 @@ public class Delete extends Curd {
         return whereSeg;
     }
 
-    public void setSingleDeleteMetaInfo(DeleteMetaInfo deleteMetaInfo) {
-        this.deleteMetaInfo = deleteMetaInfo;
-    }
 }
