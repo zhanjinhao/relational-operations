@@ -24,7 +24,7 @@ public class AstMetaData {
     private final Map<AliasEntry, List<AliasEntry>> resultColumnMap = new HashMap<>();
 
     private final List<AstMetaData> children = new ArrayList<>();
-        
+
     private AstMetaData parent = ROOT;
 
     public AstMetaData() {
@@ -42,12 +42,19 @@ public class AstMetaData {
 
     /**
      * 将astMetaData的conditionColumnMap合并到当前对象中
-     *
-     * @param astMetaData
      */
-    public void mergeConditionColumnMap(AstMetaData astMetaData) {
-        Map<AliasEntry, List<AliasEntry>> referenceMap = astMetaData.getConditionColumnMap();
-        Set<Map.Entry<AliasEntry, List<AliasEntry>>> entries = referenceMap.entrySet();
+    public void mergeColumnMap(AstMetaData astMetaData) {
+        Map<AliasEntry, List<AliasEntry>> thatConditionColumnMap = astMetaData.getConditionColumnMap();
+        mergeConditionColumnMap(thatConditionColumnMap);
+        Map<AliasEntry, List<AliasEntry>> thatResultColumnMap = astMetaData.getResultColumnMap();
+        mergeResultColumnMap(thatResultColumnMap);
+    }
+
+    /**
+     * 将thatConditionColumnMap合并到当前对象中
+     */
+    public void mergeConditionColumnMap(Map<AliasEntry, List<AliasEntry>> thatConditionColumnMap) {
+        Set<Map.Entry<AliasEntry, List<AliasEntry>>> entries = thatConditionColumnMap.entrySet();
         for (Map.Entry<AliasEntry, List<AliasEntry>> entry : entries) {
             if (this.conditionColumnMap.containsKey(entry.getKey())) {
                 this.conditionColumnMap.get(entry.getKey()).addAll(entry.getValue());
@@ -58,13 +65,10 @@ public class AstMetaData {
     }
 
     /**
-     * 将astMetaData的resultColumnMap合并到当前对象中
-     *
-     * @param astMetaData
+     * 将thatResultColumnMap合并到当前对象中
      */
-    public void mergeResultColumnMap(AstMetaData astMetaData) {
-        Map<AliasEntry, List<AliasEntry>> referenceMap = astMetaData.getResultColumnMap();
-        Set<Map.Entry<AliasEntry, List<AliasEntry>>> entries = referenceMap.entrySet();
+    public void mergeResultColumnMap(Map<AliasEntry, List<AliasEntry>> thatResultColumnMap) {
+        Set<Map.Entry<AliasEntry, List<AliasEntry>>> entries = thatResultColumnMap.entrySet();
         for (Map.Entry<AliasEntry, List<AliasEntry>> entry : entries) {
             if (this.resultColumnMap.containsKey(entry.getKey())) {
                 this.resultColumnMap.get(entry.getKey()).addAll(entry.getValue());
@@ -89,10 +93,12 @@ public class AstMetaData {
     @Override
     public String toString() {
         return "AstMetaData{" +
-                "depth=" + depth +
-                ", conditionColumnMap=" + conditionColumnMap +
-                ", resultColumnMap=" + resultColumnMap +
-                ", children=" + children +
-                '}';
+            "curd=" + curd +
+            ", depth=" + depth +
+            ", conditionColumnMap=" + conditionColumnMap +
+            ", resultColumnMap=" + resultColumnMap +
+            ", children=" + children +
+            ", parent=" + parent +
+            '}';
     }
 }

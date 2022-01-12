@@ -264,6 +264,16 @@ public class SelectParser extends StatementParser {
 
 
     /**
+     * "where" logic
+     */
+    protected Curd whereSeg() {
+        Curd curd = super.whereSeg();
+        saveSingleSelectContext(curd, curd, SingleSelectType.PRIMARY);
+        return curd;
+    }
+
+
+    /**
      * "group" "by" IDENTIFIER ("," IDENTIFIER)* ("having" logic)?
      */
     private Curd groupBySeg() {

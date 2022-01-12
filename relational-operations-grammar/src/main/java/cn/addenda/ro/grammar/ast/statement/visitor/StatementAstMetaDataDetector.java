@@ -21,9 +21,9 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         setErrorReporter(roErrorReporter);
     }
 
-    // -----------------------------------
-    // Statement涉及到的字段都认为是条件列
-    // -----------------------------------
+    // ---------------------------------------------------------
+    //  Statement涉及到的字段都先认为是条件列，具体是什么由client决定
+    // ---------------------------------------------------------
 
     @Override
     public AstMetaData visitWhereSeg(WhereSeg whereSeg) {
@@ -31,7 +31,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
 
         AstMetaData astMetaData = whereSeg.getLogic().accept(this);
-        astMetaDataCur.mergeConditionColumnMap(astMetaData);
+        astMetaDataCur.mergeColumnMap(astMetaData);
         return astMetaDataCur;
     }
 
@@ -61,7 +61,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         if (leftCurd instanceof SingleSelect) {
             astMetaDataCur.getChildren().add(leftCurd.accept(this));
         } else {
-            astMetaDataCur.mergeConditionColumnMap(leftCurd.accept(this));
+            astMetaDataCur.mergeColumnMap(leftCurd.accept(this));
         }
 
         Curd rightCurd = binary.getRightCurd();
@@ -69,7 +69,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
             if (rightCurd instanceof SingleSelect) {
                 astMetaDataCur.getChildren().add(rightCurd.accept(this));
             } else {
-                astMetaDataCur.mergeConditionColumnMap(rightCurd.accept(this));
+                astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
             }
         }
 
@@ -84,7 +84,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         if (curd instanceof SingleSelect) {
             astMetaDataCur.getChildren().add(curd.accept(this));
         } else {
-            astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnMap(curd.accept(this));
         }
         return astMetaDataCur;
     }
@@ -100,7 +100,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         AstMetaData astMetaDataCur = grouping.getAstMetaData();
 
         AstMetaData astMetaData = grouping.getCurd().accept(this);
-        astMetaDataCur.mergeConditionColumnMap(astMetaData);
+        astMetaDataCur.mergeColumnMap(astMetaData);
         return astMetaDataCur;
     }
 
@@ -122,7 +122,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         List<Curd> parameterList = function.getParameterList();
         if (parameterList != null) {
             for (Curd curd : parameterList) {
-                astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+                astMetaDataCur.mergeColumnMap(curd.accept(this));
             }
         }
         return astMetaDataCur;
@@ -135,7 +135,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         for (AssignmentList.Entry entry : entryList) {
             Token columnName = entry.getColumnName();
             astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(columnName.getLiteral()));
-            astMetaDataCur.mergeConditionColumnMap(entry.getValue().accept(this));
+            astMetaDataCur.mergeColumnMap(entry.getValue().accept(this));
         }
         return astMetaDataCur;
     }

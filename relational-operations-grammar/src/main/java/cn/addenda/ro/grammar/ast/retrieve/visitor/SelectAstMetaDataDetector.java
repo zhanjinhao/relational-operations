@@ -39,29 +39,29 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = singleSelect.getAstMetaData();
 
         Curd columnSeg = singleSelect.getColumnSeg();
-        astMetaDataCur.mergeConditionColumnMap(columnSeg.accept(this));
+        astMetaDataCur.mergeColumnMap(columnSeg.accept(this));
 
         Curd tableSeg = singleSelect.getTableSeg();
-        astMetaDataCur.mergeConditionColumnMap(tableSeg.accept(this));
+        astMetaDataCur.mergeColumnMap(tableSeg.accept(this));
 
         Curd whereSeg = singleSelect.getWhereSeg();
         if (whereSeg != null) {
-            astMetaDataCur.mergeConditionColumnMap(whereSeg.accept(this));
+            astMetaDataCur.mergeColumnMap(whereSeg.accept(this));
         }
 
         Curd groupBySeg = singleSelect.getGroupBySeg();
         if (groupBySeg != null) {
-            astMetaDataCur.mergeConditionColumnMap(groupBySeg.accept(this));
+            astMetaDataCur.mergeColumnMap(groupBySeg.accept(this));
         }
 
         Curd orderBySeg = singleSelect.getOrderBySeg();
         if (orderBySeg != null) {
-            astMetaDataCur.mergeConditionColumnMap(orderBySeg.accept(this));
+            astMetaDataCur.mergeColumnMap(orderBySeg.accept(this));
         }
 
         Curd limitSeg = singleSelect.getLimitSeg();
         if (limitSeg != null) {
-            astMetaDataCur.mergeConditionColumnMap(limitSeg.accept(this));
+            astMetaDataCur.mergeColumnMap(limitSeg.accept(this));
         }
 
         return astMetaDataCur;
@@ -73,7 +73,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         List<Curd> columnRepList = columnSeg.getColumnRepList();
         for (Curd curd : columnRepList) {
-            astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnMap(curd.accept(this));
         }
 
         return astMetaDataCur;
@@ -85,7 +85,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         Curd curd = columnRep.getCurd();
 
-        astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+        astMetaDataCur.mergeColumnMap(curd.accept(this));
 
         return astMetaDataCur;
     }
@@ -96,20 +96,20 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = caseWhen.getAstMetaData();
 
         Curd value = caseWhen.getValue();
-        astMetaDataCur.mergeConditionColumnMap(value.accept(this));
+        astMetaDataCur.mergeColumnMap(value.accept(this));
 
         List<Curd> conditionList = caseWhen.getConditionList();
         for (Curd curd : conditionList) {
-            astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnMap(curd.accept(this));
         }
 
         List<Curd> resultList = caseWhen.getResultList();
         for (Curd curd : resultList) {
-            astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnMap(curd.accept(this));
         }
 
         Curd defaultValue = caseWhen.getDefaultValue();
-        astMetaDataCur.mergeConditionColumnMap(defaultValue.accept(this));
+        astMetaDataCur.mergeColumnMap(defaultValue.accept(this));
 
         return astMetaDataCur;
     }
@@ -119,11 +119,11 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     public AstMetaData visitTableSeg(TableSeg tableSeg) {
         AstMetaData astMetaDataCur = tableSeg.getAstMetaData();
 
-        astMetaDataCur.mergeConditionColumnMap(tableSeg.getLeftCurd().accept(this));
+        astMetaDataCur.mergeColumnMap(tableSeg.getLeftCurd().accept(this));
 
         Curd rightCurd = tableSeg.getRightCurd();
         if (rightCurd != null) {
-            astMetaDataCur.mergeConditionColumnMap(rightCurd.accept(this));
+            astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
         }
 
         return astMetaDataCur;
@@ -137,7 +137,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         if (curd instanceof Select) {
             astMetaDataCur.getChildren().addAll(curd.getAstMetaData().getChildren());
         } else {
-            astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnMap(curd.accept(this));
         }
 
         return astMetaDataCur;
@@ -158,7 +158,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         List<Curd> range = inCondition.getRange();
         for (Curd item : range) {
-            astMetaData.mergeConditionColumnMap(item.accept(this));
+            astMetaData.mergeColumnMap(item.accept(this));
         }
 
         return astMetaData;
@@ -182,7 +182,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         Curd having = groupBySeg.getHaving();
         if (having != null) {
-            astMetaData.mergeConditionColumnMap(having.accept(this));
+            astMetaData.mergeColumnMap(having.accept(this));
         }
 
         return astMetaData;
@@ -210,7 +210,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     public AstMetaData visitGroupFunction(GroupFunction groupFunction) {
         AstMetaData astMetaDataCur = groupFunction.getAstMetaData();
         Curd curd = groupFunction.getCurd();
-        astMetaDataCur.mergeConditionColumnMap(curd.accept(this));
+        astMetaDataCur.mergeColumnMap(curd.accept(this));
         return astMetaDataCur;
     }
 
