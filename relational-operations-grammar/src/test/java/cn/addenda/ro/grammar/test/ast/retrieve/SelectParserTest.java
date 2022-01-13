@@ -12,6 +12,8 @@ public class SelectParserTest {
 
     static String[] sqls = new String[]{
 
+        "select * from t1, t2 where t1.a = select b from t2 where t1.c = t2.c",
+
         "select * from ts_user where (select c.a from (select true as a from dual) c)",
 
         "select * from ts_user where (select 1 from dual) = 1",

@@ -29,9 +29,16 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
     public AstMetaData visitWhereSeg(WhereSeg whereSeg) {
         // 当前AST的元信息
         AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
+        Curd logic = whereSeg.getLogic();
+        if (logic instanceof SingleSelect) {
+            AstMetaData astMetaData = logic.accept(this);
 
-        AstMetaData astMetaData = whereSeg.getLogic().accept(this);
-        astMetaDataCur.mergeColumnMap(astMetaData);
+        } else {
+            AstMetaData astMetaData = logic.accept(this);
+            astMetaDataCur.mergeColumnMap(astMetaData);
+            astMetaDataCur.setCurd(whereSeg);
+            astMetaDataCur.setDepth(astMetaData.getDepth());
+        }
         return astMetaDataCur;
     }
 
@@ -54,6 +61,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
     public AstMetaData visitBinary(Binary binary) {
         // 当前AST的元信息
         AstMetaData astMetaDataCur = binary.getAstMetaData();
+        astMetaDataCur.setCurd(binary);
 
         Curd leftCurd = binary.getLeftCurd();
 

@@ -198,7 +198,7 @@ public class SelectParser extends StatementParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -449,12 +449,12 @@ public class SelectParser extends StatementParser {
             return groupFunction();
         }
 
-        // singleSelect
+        // select
         if (checkSelectValue(tokenSequence)) {
             consume(TokenType.LEFT_PAREN, AstROErrorReporterDelegate.SELECT_primary_PARSE);
-            SingleSelect singleSelect = (SingleSelect) singleSelect();
+            Select select = (Select) select();
             consume(TokenType.RIGHT_PAREN, AstROErrorReporterDelegate.SELECT_primary_PARSE);
-            return singleSelect;
+            return select;
         }
 
         Curd primary = super.primary();

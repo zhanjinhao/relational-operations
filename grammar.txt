@@ -39,7 +39,7 @@ comparison ↑        ->  binaryArithmetic ((">" | "<" | ">=" | "<=" | "!=" | "=
 isNot ↑             ->  "is" ("not")?
 binaryArithmetic ↑  ->  unaryArithmetic (("+" | "-" | "*" | "/") unaryArithmetic)*
 unaryArithmetic ↑   ->  ("!"|"-") unaryArithmetic | primary
-primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function | "(" singleSelect ")" | groupFunction
+primary ↑+          ->  #{xxx} | ? | "true" | "false" | "null" | NUMBER | STRING | IDENTIFIER | grouping | function | "(" select ")" | groupFunction
 grouping ↑          ->  "(" logic ")"
 function ↑          ->  functionName "(" functionParameter? ("," functionParameter)* ")"
 functionParameter ↑ ->  logic | timeInterval | timeUnit | function

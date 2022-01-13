@@ -6,11 +6,11 @@ import java.util.Objects;
  * @Author ISJINHAO
  * @Date 2022/1/7 11:21
  */
-public class AliasEntry {
+public class AliasColumn {
     private String origin;
     private String alias;
 
-    public AliasEntry(String origin, String alias) {
+    public AliasColumn(String origin, String alias) {
         this.origin = origin;
         this.alias = alias;
     }
@@ -35,7 +35,7 @@ public class AliasEntry {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AliasEntry that = (AliasEntry) o;
+        AliasColumn that = (AliasColumn) o;
         return Objects.equals(origin, that.origin) && Objects.equals(alias, that.alias);
     }
 
