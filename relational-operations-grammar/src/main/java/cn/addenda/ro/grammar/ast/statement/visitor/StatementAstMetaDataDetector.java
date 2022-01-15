@@ -3,7 +3,6 @@ package cn.addenda.ro.grammar.ast.statement.visitor;
 import cn.addenda.ro.common.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.retrieve.SingleSelect;
 import cn.addenda.ro.grammar.ast.statement.*;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
@@ -27,18 +26,9 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
 
     @Override
     public AstMetaData visitWhereSeg(WhereSeg whereSeg) {
-        // 当前AST的元信息
         AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
         Curd logic = whereSeg.getLogic();
-        if (logic instanceof SingleSelect) {
-            AstMetaData astMetaData = logic.accept(this);
-
-        } else {
-            AstMetaData astMetaData = logic.accept(this);
-            astMetaDataCur.mergeColumnMap(astMetaData);
-            astMetaDataCur.setCurd(whereSeg);
-            astMetaDataCur.setDepth(astMetaData.getDepth());
-        }
+        astMetaDataCur.mergeColumnMap(logic.accept(this));
         return astMetaDataCur;
     }
 
@@ -59,26 +49,15 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
 
     @Override
     public AstMetaData visitBinary(Binary binary) {
-        // 当前AST的元信息
         AstMetaData astMetaDataCur = binary.getAstMetaData();
         astMetaDataCur.setCurd(binary);
 
         Curd leftCurd = binary.getLeftCurd();
-
-        // primary 语法是可能出现 SingleSelect 的
-        if (leftCurd instanceof SingleSelect) {
-            astMetaDataCur.getChildren().add(leftCurd.accept(this));
-        } else {
-            astMetaDataCur.mergeColumnMap(leftCurd.accept(this));
-        }
+        astMetaDataCur.mergeColumnMap(leftCurd.accept(this));
 
         Curd rightCurd = binary.getRightCurd();
         if (rightCurd != null) {
-            if (rightCurd instanceof SingleSelect) {
-                astMetaDataCur.getChildren().add(rightCurd.accept(this));
-            } else {
-                astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
-            }
+            astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
         }
 
         return astMetaDataCur;
@@ -86,14 +65,8 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
 
     @Override
     public AstMetaData visitUnaryArithmetic(UnaryArithmetic unaryArithmetic) {
-        // 当前AST的元信息
         AstMetaData astMetaDataCur = unaryArithmetic.getAstMetaData();
-        Curd curd = unaryArithmetic.getCurd();
-        if (curd instanceof SingleSelect) {
-            astMetaDataCur.getChildren().add(curd.accept(this));
-        } else {
-            astMetaDataCur.mergeColumnMap(curd.accept(this));
-        }
+        astMetaDataCur.mergeColumnMap(unaryArithmetic.getCurd().accept(this));
         return astMetaDataCur;
     }
 
@@ -104,7 +77,6 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
 
     @Override
     public AstMetaData visitGrouping(Grouping grouping) {
-        // 当前AST的元信息
         AstMetaData astMetaDataCur = grouping.getAstMetaData();
 
         AstMetaData astMetaData = grouping.getCurd().accept(this);
@@ -114,7 +86,6 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
 
     @Override
     public AstMetaData visitIdentifier(Identifier identifier) {
-        // 当前AST的元信息
         AstMetaData astMetaDataCur = identifier.getAstMetaData();
 
         Token value = identifier.getName();

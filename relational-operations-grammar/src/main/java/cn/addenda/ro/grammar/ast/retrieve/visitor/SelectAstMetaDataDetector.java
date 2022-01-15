@@ -4,7 +4,6 @@ import cn.addenda.ro.common.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.statement.Curd;
-import cn.addenda.ro.grammar.ast.statement.visitor.StatementAstMetaDataDetector;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMetaData> {
 
     public SelectAstMetaDataDetector(ROErrorReporter roErrorReporter) {
-        super.init(new StatementAstMetaDataDetector(this, roErrorReporter));
+        super.init(new StatementAstMetaDataDetectorWrapperForRetrieve(this, roErrorReporter));
         setErrorReporter(roErrorReporter);
     }
 
