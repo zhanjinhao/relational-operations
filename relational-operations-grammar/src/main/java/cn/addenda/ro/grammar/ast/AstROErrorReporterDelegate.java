@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast;
 
-import cn.addenda.ro.grammar.error.reporter.AbstractROErrorReporterDelegate;
+import cn.addenda.ro.error.reporter.AbstractROErrorReporterDelegate;
 import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 
 /**

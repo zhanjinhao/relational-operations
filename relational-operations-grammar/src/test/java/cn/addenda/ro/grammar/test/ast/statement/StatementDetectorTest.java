@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.test.ast.statement;
 
-import cn.addenda.ro.grammar.error.reporter.DumbROErrorReporterDelegate;
+import cn.addenda.ro.error.reporter.DumbROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.CurdParserFactory;
 import cn.addenda.ro.grammar.ast.statement.Curd;
 import cn.addenda.ro.grammar.ast.statement.StatementParser;

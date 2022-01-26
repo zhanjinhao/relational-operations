@@ -1,6 +1,6 @@
 package cn.addenda.ro.core.operator;
 
-import cn.addenda.ro.grammar.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.reporter.ROErrorReporter;
 import cn.addenda.ro.core.OperatorRunTimeContext;
 import cn.addenda.ro.core.OperatorROErrorReporterDelegate;
 import cn.addenda.ro.core.OperatorROErrorWrapper;

@@ -1,6 +1,6 @@
-package cn.addenda.ro.grammar.error.reporter;
+package cn.addenda.ro.error.reporter;
 
-import cn.addenda.ro.grammar.error.ROError;
+import cn.addenda.ro.error.ROError;
 
 public interface ROErrorReporter {
 

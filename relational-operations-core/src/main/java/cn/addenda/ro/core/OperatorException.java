@@ -1,6 +1,6 @@
 package cn.addenda.ro.core;
 
-import cn.addenda.ro.grammar.exception.ROException;
+import cn.addenda.ro.ROException;
 
 /**
  * @Author ISJINHAO

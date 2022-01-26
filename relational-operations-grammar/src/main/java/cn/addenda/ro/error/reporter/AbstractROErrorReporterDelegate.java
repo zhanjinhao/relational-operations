@@ -1,7 +1,7 @@
-package cn.addenda.ro.grammar.error.reporter;
+package cn.addenda.ro.error.reporter;
 
-import cn.addenda.ro.grammar.error.ROError;
-import cn.addenda.ro.grammar.exception.ROException;
+import cn.addenda.ro.error.ROError;
+import cn.addenda.ro.ROException;
 
 import java.util.HashMap;
 import java.util.Map;

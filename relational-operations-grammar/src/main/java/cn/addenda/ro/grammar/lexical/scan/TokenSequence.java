@@ -1,7 +1,7 @@
 package cn.addenda.ro.grammar.lexical.scan;
 
 
-import cn.addenda.ro.grammar.error.ROError;
+import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.lexical.Sequence;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;

@@ -1,4 +1,4 @@
-package cn.addenda.ro.grammar.exception;
+package cn.addenda.ro;
 
 /**
  * @Author ISJINHAO

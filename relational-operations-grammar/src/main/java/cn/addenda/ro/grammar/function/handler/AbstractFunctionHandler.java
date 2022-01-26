@@ -1,7 +1,7 @@
 package cn.addenda.ro.grammar.function.handler;
 
 import cn.addenda.ro.grammar.constant.InnerType;
-import cn.addenda.ro.grammar.error.ROError;
+import cn.addenda.ro.error.ROError;
 import cn.addenda.ro.grammar.constant.DateConst;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.lexical.token.Token;

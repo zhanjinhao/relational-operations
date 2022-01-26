@@ -1,7 +1,7 @@
 package cn.addenda.ro.grammar.function.handler;
 
-import cn.addenda.ro.grammar.error.ROError;
-import cn.addenda.ro.grammar.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.ROError;
+import cn.addenda.ro.error.reporter.ROErrorReporter;
 
 /**
  * @Author ISJINHAO

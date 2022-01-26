@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.retrieve.visitor;
 
-import cn.addenda.ro.grammar.error.reporter.ROErrorReporter;
+import cn.addenda.ro.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.LogicGrammarValidationDelegate;
 import cn.addenda.ro.grammar.ast.retrieve.*;
