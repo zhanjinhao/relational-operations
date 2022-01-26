@@ -10,7 +10,7 @@ import cn.addenda.ro.grammar.lexical.scan.TokenSequence;
 public class LexicalTest {
 
     static String[] sqlList = new String[]{
-//            "select * from SCORE where DEGREE > 60 and DEGREE < 80",
+            "select * from SCORE where C < '12'",
 //
 //            "select * from STUDENT order by CLASS desc",
 //

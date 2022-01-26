@@ -1,5 +1,8 @@
 package cn.addenda.ro.grammar.lexical.scan;
 
+import cn.addenda.ro.error.ROError;
+import cn.addenda.ro.error.reporter.ROErrorReporter;
+import cn.addenda.ro.grammar.lexical.ScanErrorReporterDelegate;
 import cn.addenda.ro.grammar.lexical.Scanner;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
@@ -9,9 +12,9 @@ import cn.addenda.ro.grammar.lexical.token.TokenTypeLexemeMapping;
  * @Author ISJINHAO
  * @Date 2021/2/23 19:58
  */
-public abstract class AbstractScanner implements Scanner<TokenSequence> {
+public abstract class AbstractScanner implements Scanner<TokenSequence>, ROErrorReporter {
 
-    protected static final int ERROR_CODE_SCANNER = 10002;
+    private ROErrorReporter roErrorReporter = new ScanErrorReporterDelegate();
 
     private int index = 0;
 
@@ -48,4 +51,13 @@ public abstract class AbstractScanner implements Scanner<TokenSequence> {
         index++;
     }
 
+    @Override
+    public void error(int errorCode) {
+        roErrorReporter.error(errorCode);
+    }
+
+    @Override
+    public void error(int errorCode, ROError attachment) {
+        roErrorReporter.error(errorCode, attachment);
+    }
 }

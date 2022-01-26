@@ -8,8 +8,6 @@ import java.util.function.Predicate;
  */
 public abstract class Sequence<T, I> {
 
-    public static final int ERROR_CODE_SEQUENCE = 10001;
-
     protected T source;
     protected int length;
 
@@ -116,7 +114,7 @@ public abstract class Sequence<T, I> {
 
     public I takePre() {
         if (current == 0) {
-            throw new LexicalException(ERROR_CODE_SEQUENCE, "Current index is 0, these is no leading character！");
+            throw new SequenceException("Current index is 0, these is no leading character！");
         }
         return indexOf(current - 1);
     }

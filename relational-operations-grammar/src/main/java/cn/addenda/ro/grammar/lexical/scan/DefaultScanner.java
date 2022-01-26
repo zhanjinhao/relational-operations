@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.lexical.scan;
 
-import cn.addenda.ro.grammar.lexical.LexicalException;
+import cn.addenda.ro.grammar.lexical.ScanErrorReporterDelegate;
 import cn.addenda.ro.grammar.lexical.token.TokenType;
 import cn.addenda.ro.grammar.lexical.token.TokenTypeLexemeMapping;
 
@@ -76,7 +76,7 @@ public class DefaultScanner extends AbstractScanner {
                 } else if (CharUtil.isAlpha(c)) {
                     identifier();
                 } else {
-                    throw new LexicalException(ERROR_CODE_SCANNER, "Unexpected character. Can not recognize: " + c + "!");
+                    error(ScanErrorReporterDelegate.LEXICAL_UNEXPECTED_CHAR);
                 }
                 break;
         }
@@ -84,25 +84,25 @@ public class DefaultScanner extends AbstractScanner {
 
     private void hashMarkParameter() {
         if (!charSequence.curEqual('{')) {
-            throw new LexicalException(ERROR_CODE_SCANNER, "The hash mark format is: '#{xxx}'");
+            error(ScanErrorReporterDelegate.LEXICAL_HASHMARK_FORMAT);
         }
         while (!charSequence.curEqual('}')) {
             charSequence.advance();
         }
         if (charSequence.isAtEnd()) {
-            throw new LexicalException(ERROR_CODE_SCANNER, "Unterminated hash mark parameter. Expect : '}'.");
+            error(ScanErrorReporterDelegate.LEXICAL_HASHMARK_FORMAT);
         }
         charSequence.advance();
         addToken(TokenType.HASH_MARK_PLACEHOLDER, charSequence.curLiteral());
     }
 
     private void string() {
-        while (!charSequence.curEqual('\'')) {
+        while (!charSequence.isAtEnd() && !charSequence.curEqual('\'')) {
             charSequence.advance();
         }
 
         if (charSequence.isAtEnd()) {
-            throw new LexicalException(ERROR_CODE_SCANNER, "Unterminated string. Expect : '.'");
+            error(ScanErrorReporterDelegate.LEXICAL_STRING);
         }
 
         charSequence.advance();
