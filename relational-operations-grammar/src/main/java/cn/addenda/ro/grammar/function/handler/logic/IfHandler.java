@@ -1,7 +1,7 @@
 package cn.addenda.ro.grammar.function.handler.logic;
 
 
-import cn.addenda.ro.common.constant.InnerType;
+import cn.addenda.ro.grammar.constant.InnerType;
 import cn.addenda.ro.grammar.function.evaluator.FunctionEvaluator;
 import cn.addenda.ro.grammar.function.handler.AbstractFunctionHandler;
 import cn.addenda.ro.grammar.function.handler.FunctionROErrorReporterDelegate;

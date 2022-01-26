@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.addenda.ro.common.util;
+package cn.addenda.ro.grammar.util;
 
 import java.text.ParseException;
 import java.text.ParsePosition;

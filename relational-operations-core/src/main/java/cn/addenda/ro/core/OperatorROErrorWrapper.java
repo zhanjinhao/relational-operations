@@ -1,6 +1,6 @@
 package cn.addenda.ro.core;
 
-import cn.addenda.ro.common.error.ROError;
+import cn.addenda.ro.grammar.error.ROError;
 
 /**
  * @Author ISJINHAO

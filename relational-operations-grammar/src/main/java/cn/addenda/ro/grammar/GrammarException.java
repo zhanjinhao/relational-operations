@@ -1,7 +1,6 @@
 package cn.addenda.ro.grammar;
 
-
-import cn.addenda.ro.common.exception.ROException;
+import cn.addenda.ro.grammar.exception.ROException;
 
 /**
  * @Author ISJINHAO

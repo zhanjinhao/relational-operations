@@ -1,4 +1,4 @@
-package cn.addenda.ro.common.util;
+package cn.addenda.ro.grammar.util;
 
 public class Flag {
 

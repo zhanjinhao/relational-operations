@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.create.visitor;
 
-import cn.addenda.ro.common.error.reporter.ROErrorReporter;
+import cn.addenda.ro.grammar.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.create.*;
 import cn.addenda.ro.grammar.ast.retrieve.Select;

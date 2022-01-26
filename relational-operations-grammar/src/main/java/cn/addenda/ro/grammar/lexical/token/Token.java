@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.lexical.token;
 
-import cn.addenda.ro.common.error.ROError;
+import cn.addenda.ro.grammar.error.ROError;
 
 import java.util.Objects;
 

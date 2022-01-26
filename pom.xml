@@ -13,7 +13,6 @@
         <module>relational-operations-json</module>
         <module>relational-operations-excel</module>
         <module>relational-operations-grammar</module>
-        <module>relational-operations-common</module>
         <module>relational-operations-pojo</module>
     </modules>
 

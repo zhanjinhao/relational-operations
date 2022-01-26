@@ -1,7 +1,7 @@
 package cn.addenda.ro.grammar.function.handler;
 
-import cn.addenda.ro.common.constant.InnerType;
-import cn.addenda.ro.common.error.ROError;
+import cn.addenda.ro.grammar.constant.InnerType;
+import cn.addenda.ro.grammar.error.ROError;
 import cn.addenda.ro.grammar.ast.statement.CurdType;
 import cn.addenda.ro.grammar.ast.statement.Function;
 

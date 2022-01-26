@@ -1,7 +1,7 @@
 package cn.addenda.ro.core;
 
-import cn.addenda.ro.common.error.ROError;
-import cn.addenda.ro.common.error.reporter.AbstractROErrorReporterDelegate;
+import cn.addenda.ro.grammar.error.ROError;
+import cn.addenda.ro.grammar.error.reporter.AbstractROErrorReporterDelegate;
 import cn.addenda.ro.grammar.function.FunctionException;
 
 /**

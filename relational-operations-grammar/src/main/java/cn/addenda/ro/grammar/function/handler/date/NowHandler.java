@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.function.handler.date;
 
-import cn.addenda.ro.common.constant.InnerType;
+import cn.addenda.ro.grammar.constant.InnerType;
 import cn.addenda.ro.grammar.function.handler.ErrorReportableFunctionHandler;
 import cn.addenda.ro.grammar.function.handler.FunctionROErrorReporterDelegate;
 import cn.addenda.ro.grammar.ast.statement.Curd;

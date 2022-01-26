@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast.statement;
 
-import cn.addenda.ro.common.error.ROError;
+import cn.addenda.ro.grammar.error.ROError;
 import cn.addenda.ro.grammar.lexical.token.Token;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 

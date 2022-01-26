@@ -1,6 +1,6 @@
 package cn.addenda.ro.grammar.ast;
 
-import cn.addenda.ro.common.error.reporter.ROErrorReporter;
+import cn.addenda.ro.grammar.error.reporter.ROErrorReporter;
 
 /**
  * @Author ISJINHAO

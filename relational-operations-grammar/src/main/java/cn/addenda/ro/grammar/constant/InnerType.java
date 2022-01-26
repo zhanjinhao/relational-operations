@@ -1,4 +1,4 @@
-package cn.addenda.ro.common.constant;
+package cn.addenda.ro.grammar.constant;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
