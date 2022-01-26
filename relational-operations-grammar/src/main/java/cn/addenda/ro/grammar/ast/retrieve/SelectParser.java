@@ -198,7 +198,7 @@ public class SelectParser extends StatementParser {
         Curd left = tableRep();
 
         while (tokenSequence.curEqual(TokenType.JOIN,
-            TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
+                TokenType.COMMA, TokenType.LEFT, TokenType.RIGHT, TokenType.CROSS)) {
 
             Token qualifier = null;
             Token join = null;
@@ -221,7 +221,9 @@ public class SelectParser extends StatementParser {
                 left = new TableSeg(qualifier, left, join, right);
             }
         }
-
+        if (left instanceof TableRep) {
+            return new TableSeg(null, left, null, null, null);
+        }
         return left;
     }
 

@@ -17,7 +17,7 @@ public abstract class SelectVisitorWithDelegate<R> extends SelectVisitor<R> {
 
     @Override
     public R visitWhereSeg(WhereSeg whereSeg) {
-        return whereSeg.getLogic().accept(delegate);
+        return whereSeg.accept(delegate);
     }
 
     @Override

@@ -4,7 +4,6 @@ import cn.addenda.ro.common.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
 import cn.addenda.ro.grammar.ast.retrieve.Select;
-import cn.addenda.ro.grammar.ast.retrieve.SingleSelect;
 import cn.addenda.ro.grammar.ast.statement.*;
 import cn.addenda.ro.grammar.ast.statement.visitor.StatementAstMetaDataDetector;
 import cn.addenda.ro.grammar.ast.statement.visitor.StatementVisitorForDelegation;
@@ -29,7 +28,8 @@ public class StatementAstMetaDataDetectorWrapperForRetrieve extends StatementVis
         if (curd instanceof Select) {
             AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
             AstMetaData accept = curd.accept(this);
-            astMetaDataCur.getChildren().add(accept);
+            astMetaDataCur.getConditionChildren().add(accept);
+            accept.setParent(astMetaDataCur);
             return astMetaDataCur;
         } else {
             return statementAstMetaDataDetector.visitWhereSeg(whereSeg);
@@ -56,19 +56,22 @@ public class StatementAstMetaDataDetectorWrapperForRetrieve extends StatementVis
         AstMetaData astMetaDataCur = binary.getAstMetaData();
 
         Curd leftCurd = binary.getLeftCurd();
+        AstMetaData leftAccept = leftCurd.accept(this);
         if (leftCurd instanceof Select) {
-            AstMetaData accept = leftCurd.accept(this);
-            astMetaDataCur.getChildren().add(accept);
+            astMetaDataCur.getConditionChildren().add(leftAccept);
+            leftAccept.setParent(astMetaDataCur);
         } else {
-            astMetaDataCur.mergeColumnMap(leftCurd.accept(this));
+            astMetaDataCur.mergeColumnReference(leftAccept);
         }
 
         Curd rightCurd = binary.getRightCurd();
         if (rightCurd != null) {
-            if (rightCurd instanceof SingleSelect) {
-                astMetaDataCur.getChildren().add(rightCurd.accept(this));
+            AstMetaData rightAccept = rightCurd.accept(this);
+            if (rightCurd instanceof Select) {
+                astMetaDataCur.getConditionChildren().add(rightAccept);
+                rightAccept.setParent(astMetaDataCur);
             } else {
-                astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
+                astMetaDataCur.mergeColumnReference(rightAccept);
             }
         }
 
@@ -81,7 +84,7 @@ public class StatementAstMetaDataDetectorWrapperForRetrieve extends StatementVis
         if (curd instanceof Select) {
             AstMetaData astMetaDataCur = unaryArithmetic.getAstMetaData();
             AstMetaData accept = curd.accept(this);
-            astMetaDataCur.getChildren().add(accept);
+            astMetaDataCur.getConditionChildren().add(accept);
             return astMetaDataCur;
         } else {
             return statementAstMetaDataDetector.visitUnaryArithmetic(unaryArithmetic);

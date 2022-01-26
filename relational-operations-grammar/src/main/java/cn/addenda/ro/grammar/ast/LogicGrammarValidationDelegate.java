@@ -26,15 +26,14 @@ public class LogicGrammarValidationDelegate {
             Logic logic = (Logic) curd;
             return checkBooleanResult(logic.getLeftCurd()) &&
                     checkBooleanResult(logic.getRightCurd());
-        } else if (curd instanceof Comparison) {
+        } else if (curd instanceof Comparison || curd instanceof ExistsCondition || curd instanceof InCondition) {
             return true;
         } else if (curd instanceof Identifier) {
             Identifier identifier = (Identifier) curd;
             Token name = identifier.getName();
             return TokenType.TRUE.equals(name.getType()) || TokenType.FALSE.equals(name.getType());
         }
-        return !(curd instanceof ExistsCondition) && !(curd instanceof InCondition) &&
-                !(curd instanceof SingleSelect) && !(curd instanceof Select);
+        return !(curd instanceof SingleSelect);
     }
 
     public static boolean checkComparisonResult(Curd curd) {

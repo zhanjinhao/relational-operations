@@ -4,6 +4,8 @@ import cn.addenda.ro.common.error.reporter.ROErrorReporter;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.retrieve.*;
 import cn.addenda.ro.grammar.ast.statement.Curd;
+import cn.addenda.ro.grammar.ast.statement.Identifier;
+import cn.addenda.ro.grammar.ast.statement.Literal;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.List;
@@ -22,12 +24,20 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitSelect(Select select) {
         AstMetaData astMetaDataCur = select.getAstMetaData();
-        AstMetaData leftAstMetaData = select.getLeftCurd().accept(this);
-        astMetaDataCur.getChildren().add(leftAstMetaData);
+        Curd leftCurd = select.getLeftCurd();
+        if (leftCurd instanceof Select) {
+            AstMetaData accept = leftCurd.accept(this);
+            accept.setParent(astMetaDataCur);
+            astMetaDataCur.getSubSegments().add(accept);
+        } else if (leftCurd instanceof SingleSelect) {
+            AstMetaData accept = leftCurd.accept(this);
+            astMetaDataCur.getSubSegments().add(accept);
+        }
 
         Curd rightCurd = select.getRightCurd();
+        // rightCurd如果不为空，就是SingleSelect
         if (rightCurd != null) {
-            astMetaDataCur.getChildren().add(rightCurd.accept(this));
+            astMetaDataCur.getSubSegments().add(rightCurd.accept(this));
         }
 
         return astMetaDataCur;
@@ -38,30 +48,39 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = singleSelect.getAstMetaData();
 
         Curd columnSeg = singleSelect.getColumnSeg();
-        astMetaDataCur.mergeColumnMap(columnSeg.accept(this));
+        AstMetaData columnSegAmd = columnSeg.accept(this);
+        astMetaDataCur.mergeResultColumnReference(columnSegAmd.getConditionColumnReference());
+        astMetaDataCur.getResultColumnList().addAll(columnSegAmd.getResultColumnList());
 
-        Curd tableSeg = singleSelect.getTableSeg();
-        astMetaDataCur.mergeColumnMap(tableSeg.accept(this));
+        TableSeg tableSeg = (TableSeg) singleSelect.getTableSeg();
+        AstMetaData tableSegAmd = tableSeg.accept(this);
+        astMetaDataCur.getAliasTableMap().putAll(tableSegAmd.getAliasTableMap());
+//        astMetaDataCur.mergeJoinColumnReference(tableSegAmd.getConditionColumnReference());
+//        astMetaDataCur.createTable(tableSegAmd.getResultColumnReference());
+        astMetaDataCur.mergeColumnReference(tableSegAmd);
 
         Curd whereSeg = singleSelect.getWhereSeg();
         if (whereSeg != null) {
-            astMetaDataCur.mergeColumnMap(whereSeg.accept(this));
+            astMetaDataCur.mergeColumnReference(whereSeg.accept(this));
         }
 
         Curd groupBySeg = singleSelect.getGroupBySeg();
         if (groupBySeg != null) {
-            astMetaDataCur.mergeColumnMap(groupBySeg.accept(this));
+            AstMetaData accept = groupBySeg.accept(this);
+            astMetaDataCur.mergeGroupByColumnReference(accept.getConditionColumnReference());
+            astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
         Curd orderBySeg = singleSelect.getOrderBySeg();
         if (orderBySeg != null) {
-            astMetaDataCur.mergeColumnMap(orderBySeg.accept(this));
+            AstMetaData accept = orderBySeg.accept(this);
+            astMetaDataCur.mergeOrderByColumnReference(accept.getConditionColumnReference());
+            astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
-        Curd limitSeg = singleSelect.getLimitSeg();
-        if (limitSeg != null) {
-            astMetaDataCur.mergeColumnMap(limitSeg.accept(this));
-        }
+        // limit 不存在字段
+
+        astMetaDataCur.sortMetaData();
 
         return astMetaDataCur;
     }
@@ -72,7 +91,9 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         List<Curd> columnRepList = columnSeg.getColumnRepList();
         for (Curd curd : columnRepList) {
-            astMetaDataCur.mergeColumnMap(curd.accept(this));
+            AstMetaData accept = curd.accept(this);
+            astMetaDataCur.mergeColumnReference(accept);
+            astMetaDataCur.getResultColumnList().addAll(accept.getResultColumnList());
         }
 
         return astMetaDataCur;
@@ -81,10 +102,30 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitColumnRep(ColumnRep columnRep) {
         AstMetaData astMetaDataCur = columnRep.getAstMetaData();
-
+        Token alias = columnRep.getOperator();
         Curd curd = columnRep.getCurd();
 
-        astMetaDataCur.mergeColumnMap(curd.accept(this));
+        // 当没有别名的时候，curd 只会是 Literal 或者 Identifier
+        // 此时需要将 curd 加入到 resultColumnList
+        if (alias == null) {
+            if (curd instanceof Literal) {
+                Literal literal = (Literal) curd;
+                Token value = literal.getValue();
+                astMetaDataCur.getResultColumnList().add(value);
+            } else if (curd instanceof Identifier) {
+                Identifier identifier = (Identifier) curd;
+                Token value = identifier.getName();
+                astMetaDataCur.getResultColumnList().add(value);
+            } else {
+                // error
+            }
+        }
+        // 当存在别名的时候，需要将 别名 加入到 resultColumnList
+        else {
+            astMetaDataCur.getResultColumnList().add(alias);
+        }
+        AstMetaData accept = curd.accept(this);
+        astMetaDataCur.mergeColumnReference(accept);
 
         return astMetaDataCur;
     }
@@ -95,20 +136,20 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = caseWhen.getAstMetaData();
 
         Curd value = caseWhen.getValue();
-        astMetaDataCur.mergeColumnMap(value.accept(this));
+        astMetaDataCur.mergeColumnReference(value.accept(this));
 
         List<Curd> conditionList = caseWhen.getConditionList();
         for (Curd curd : conditionList) {
-            astMetaDataCur.mergeColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnReference(curd.accept(this));
         }
 
         List<Curd> resultList = caseWhen.getResultList();
         for (Curd curd : resultList) {
-            astMetaDataCur.mergeColumnMap(curd.accept(this));
+            astMetaDataCur.mergeColumnReference(curd.accept(this));
         }
 
         Curd defaultValue = caseWhen.getDefaultValue();
-        astMetaDataCur.mergeColumnMap(defaultValue.accept(this));
+        astMetaDataCur.mergeColumnReference(defaultValue.accept(this));
 
         return astMetaDataCur;
     }
@@ -118,11 +159,30 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     public AstMetaData visitTableSeg(TableSeg tableSeg) {
         AstMetaData astMetaDataCur = tableSeg.getAstMetaData();
 
-        astMetaDataCur.mergeColumnMap(tableSeg.getLeftCurd().accept(this));
+        // resultColumnReference 存table信息
+        AstMetaData leftAmd = tableSeg.getLeftCurd().accept(this);
+        astMetaDataCur.mergeResultColumnReference(leftAmd.getResultColumnReference());
+        astMetaDataCur.createTable(leftAmd.getResultColumnReference());
+        astMetaDataCur.mergeColumnReference(leftAmd);
+
+        astMetaDataCur.getAliasTableMap().putAll(leftAmd.getAliasTableMap());
 
         Curd rightCurd = tableSeg.getRightCurd();
         if (rightCurd != null) {
-            astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
+            AstMetaData rightAmd = rightCurd.accept(this);
+            astMetaDataCur.mergeResultColumnReference(rightAmd.getResultColumnReference());
+            astMetaDataCur.createTable(rightAmd.getResultColumnReference());
+            astMetaDataCur.mergeColumnReference(rightAmd);
+
+            astMetaDataCur.getAliasTableMap().putAll(rightAmd.getAliasTableMap());
+        }
+
+        // conditionColumnReference 存on logic信息
+        Curd condition = tableSeg.getCondition();
+        if (condition != null) {
+            AstMetaData accept = condition.accept(this);
+            astMetaDataCur.mergeJoinColumnReference(accept.getConditionColumnReference());
+            astMetaDataCur.createTable(accept.getConditionColumnReference());
         }
 
         return astMetaDataCur;
@@ -133,10 +193,29 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
         AstMetaData astMetaDataCur = tableRep.getAstMetaData();
 
         Curd curd = tableRep.getCurd();
-        if (curd instanceof Select) {
-            astMetaDataCur.getChildren().addAll(curd.getAstMetaData().getChildren());
-        } else {
-            astMetaDataCur.mergeColumnMap(curd.accept(this));
+        Token alias = tableRep.getAlias();
+
+        // 有别名的场景下，表名就是别名。如果是 Select，设置父子引用。如果不是，合并即可
+        if (alias != null) {
+            String tableName = String.valueOf(alias.getLiteral());
+            astMetaDataCur.createTable(tableName);
+            AstMetaData accept = curd.accept(this);
+            // 一旦有了别名，原始的表就不能再使用了，原始的表要存起来
+            astMetaDataCur.getAliasTableMap().put(tableName, curd);
+            if (curd instanceof Select) {
+                accept.setParent(astMetaDataCur);
+                astMetaDataCur.getTableChildren().add(accept);
+            } else {
+                // 此时 accept 中有用的是 conditionColumnReference
+                // 有别名之后，不在需要真实的表名了
+                // astMetaDataCur.mergeColumnReference(accept);
+            }
+        }
+        // 没有别名的场景下，curd只会是Identifier。此时需要在引用中新建一个表即可
+        else {
+            Identifier identifier = (Identifier) curd;
+            String tableName = String.valueOf(identifier.getName().getLiteral());
+            astMetaDataCur.createTable(tableName);
         }
 
         return astMetaDataCur;
@@ -145,28 +224,35 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     @Override
     public AstMetaData visitInCondition(InCondition inCondition) {
 
-        AstMetaData astMetaData = inCondition.getAstMetaData();
+        AstMetaData astMetaDataCur = inCondition.getAstMetaData();
+
+        // 条件字段需要加入
+        Token identifier = inCondition.getIdentifier();
+        astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(identifier.getLiteral()));
 
         Curd curd = inCondition.getCurd();
-
         // select 模式
         if (curd != null) {
-            astMetaData.getChildren().add(curd.accept(this));
-            return astMetaData;
+            AstMetaData accept = curd.accept(this);
+            accept.setParent(astMetaDataCur);
+            astMetaDataCur.getConditionChildren().add(accept);
+            return astMetaDataCur;
         }
 
-        List<Curd> range = inCondition.getRange();
-        for (Curd item : range) {
-            astMetaData.mergeColumnMap(item.accept(this));
-        }
+        // range 模式下，range里的不会包含Identifier
 
-        return astMetaData;
+        return astMetaDataCur;
     }
 
     @Override
     public AstMetaData visitExistsCondition(ExistsCondition existsCondition) {
         AstMetaData astMetaData = existsCondition.getAstMetaData();
-        astMetaData.getChildren().add(existsCondition.getCurd().accept(this));
+
+        Curd curd = existsCondition.getCurd();
+        AstMetaData accept = curd.accept(this);
+
+        accept.setParent(astMetaData);
+        astMetaData.getConditionChildren().add(accept);
         return astMetaData;
     }
 
@@ -181,7 +267,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
 
         Curd having = groupBySeg.getHaving();
         if (having != null) {
-            astMetaData.mergeColumnMap(having.accept(this));
+            astMetaData.mergeColumnReference(having.accept(this));
         }
 
         return astMetaData;
@@ -209,7 +295,7 @@ public class SelectAstMetaDataDetector extends SelectVisitorWithDelegate<AstMeta
     public AstMetaData visitGroupFunction(GroupFunction groupFunction) {
         AstMetaData astMetaDataCur = groupFunction.getAstMetaData();
         Curd curd = groupFunction.getCurd();
-        astMetaDataCur.mergeColumnMap(curd.accept(this));
+        astMetaDataCur.mergeColumnReference(curd.accept(this));
         return astMetaDataCur;
     }
 

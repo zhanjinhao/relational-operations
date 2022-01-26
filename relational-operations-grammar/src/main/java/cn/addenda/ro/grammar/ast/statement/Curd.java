@@ -14,6 +14,10 @@ public abstract class Curd {
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
 
+    public Curd() {
+        astMetaData.setCurd(this);
+    }
+
     public abstract <R> R accept(CurdVisitor<R> curdVisitor);
 
     @Override
@@ -24,7 +28,6 @@ public abstract class Curd {
     public AstMetaData getAstMetaData() {
         return astMetaData;
     }
-
 
 
 }

@@ -93,6 +93,10 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
             }
         }
 
+        // 当值不是Literal或Identifier时，必须存在别名
+        if (!(curd instanceof Literal || curd instanceof Identifier) && alias == null) {
+            error(AstROErrorReporterDelegate.SELECT_columnRep_PARSE);
+        }
         curd.accept(this);
         return null;
     }
@@ -221,7 +225,9 @@ public class SelectGrammarValidator extends SelectVisitorWithDelegate<Void> {
         }
         if (range != null) {
             for (Curd item : range) {
-                item.accept(this);
+                if (!(item instanceof Literal)) {
+                    error(AstROErrorReporterDelegate.SELECT_inCondition_VALIDATION);
+                }
             }
         }
 

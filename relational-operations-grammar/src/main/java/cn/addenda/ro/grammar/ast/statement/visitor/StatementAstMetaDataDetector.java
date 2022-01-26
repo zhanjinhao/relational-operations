@@ -28,7 +28,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
     public AstMetaData visitWhereSeg(WhereSeg whereSeg) {
         AstMetaData astMetaDataCur = whereSeg.getAstMetaData();
         Curd logic = whereSeg.getLogic();
-        astMetaDataCur.mergeColumnMap(logic.accept(this));
+        astMetaDataCur.mergeColumnReference(logic.accept(this));
         return astMetaDataCur;
     }
 
@@ -50,14 +50,13 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
     @Override
     public AstMetaData visitBinary(Binary binary) {
         AstMetaData astMetaDataCur = binary.getAstMetaData();
-        astMetaDataCur.setCurd(binary);
 
         Curd leftCurd = binary.getLeftCurd();
-        astMetaDataCur.mergeColumnMap(leftCurd.accept(this));
+        astMetaDataCur.mergeColumnReference(leftCurd.accept(this));
 
         Curd rightCurd = binary.getRightCurd();
         if (rightCurd != null) {
-            astMetaDataCur.mergeColumnMap(rightCurd.accept(this));
+            astMetaDataCur.mergeColumnReference(rightCurd.accept(this));
         }
 
         return astMetaDataCur;
@@ -66,7 +65,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
     @Override
     public AstMetaData visitUnaryArithmetic(UnaryArithmetic unaryArithmetic) {
         AstMetaData astMetaDataCur = unaryArithmetic.getAstMetaData();
-        astMetaDataCur.mergeColumnMap(unaryArithmetic.getCurd().accept(this));
+        astMetaDataCur.mergeColumnReference(unaryArithmetic.getCurd().accept(this));
         return astMetaDataCur;
     }
 
@@ -80,7 +79,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         AstMetaData astMetaDataCur = grouping.getAstMetaData();
 
         AstMetaData astMetaData = grouping.getCurd().accept(this);
-        astMetaDataCur.mergeColumnMap(astMetaData);
+        astMetaDataCur.mergeColumnReference(astMetaData);
         return astMetaDataCur;
     }
 
@@ -101,7 +100,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         List<Curd> parameterList = function.getParameterList();
         if (parameterList != null) {
             for (Curd curd : parameterList) {
-                astMetaDataCur.mergeColumnMap(curd.accept(this));
+                astMetaDataCur.mergeColumnReference(curd.accept(this));
             }
         }
         return astMetaDataCur;
@@ -114,7 +113,7 @@ public class StatementAstMetaDataDetector extends StatementVisitorForDelegation<
         for (AssignmentList.Entry entry : entryList) {
             Token columnName = entry.getColumnName();
             astMetaDataCur.putUndeterminedConditionColumn(String.valueOf(columnName.getLiteral()));
-            astMetaDataCur.mergeColumnMap(entry.getValue().accept(this));
+            astMetaDataCur.mergeColumnReference(entry.getValue().accept(this));
         }
         return astMetaDataCur;
     }
