@@ -320,4 +320,19 @@ public class AstMetaData {
         return strings;
     }
 
+    public boolean checkViewExists(String viewName) {
+        Set<String> strings = conditionColumnReference.keySet();
+        return strings.contains(viewName);
+    }
+
+    public String getViewAliasName(Curd curd) {
+        Set<Map.Entry<String, Curd>> entries = aliasTableMap.entrySet();
+        for (Map.Entry<String, Curd> entry : entries) {
+            if (entry.getValue().equals(curd)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
 }
