@@ -96,7 +96,7 @@ public class InsertParser extends StatementParser {
         Select select = (Select) insertSelectParser.parse();
         InsertSelectRep insertSelectRep = new InsertSelectRep(tokens, select);
         select.setSelectType(SelectType.INSERT);
-        saveSingleSelectContext(select, insertSelectRep, SingleSelectType.INSERT);
+        saveSingleSelectContext(select, SingleSelectType.INSERT);
         return insertSelectRep;
     }
 

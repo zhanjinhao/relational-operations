@@ -2,7 +2,6 @@ package cn.addenda.ro.grammar.ast;
 
 import cn.addenda.ro.grammar.ast.create.InsertParser;
 import cn.addenda.ro.grammar.ast.delete.DeleteParser;
-import cn.addenda.ro.grammar.ast.retrieve.Select;
 import cn.addenda.ro.grammar.ast.retrieve.SelectParser;
 import cn.addenda.ro.grammar.ast.statement.Curd;
 import cn.addenda.ro.grammar.ast.statement.Function;
@@ -25,16 +24,13 @@ public class CurdParser extends AbstractCurdParser {
 
     @Override
     public Curd parse() {
-        if (tokenSequence.equalThenAdvance(TokenType.SELECT)) {
-            Select select = (Select) new SelectParser(tokenSequence, getFunctionEvaluator()).parse();
-//            select.accept()
-//            select.accept(new SingleSelectMetaInfoDetector());
-            return select;
-        } else if (tokenSequence.equalThenAdvance(TokenType.INSERT)) {
+        if (tokenSequence.curEqual(TokenType.SELECT)) {
+            return new SelectParser(tokenSequence, getFunctionEvaluator()).parse();
+        } else if (tokenSequence.curEqual(TokenType.INSERT)) {
             return new InsertParser(tokenSequence, getFunctionEvaluator()).parse();
-        } else if (tokenSequence.equalThenAdvance(TokenType.DELETE)) {
+        } else if (tokenSequence.curEqual(TokenType.DELETE)) {
             return new DeleteParser(tokenSequence, getFunctionEvaluator()).parse();
-        } else if (tokenSequence.equalThenAdvance(TokenType.UPDATE)) {
+        } else if (tokenSequence.curEqual(TokenType.UPDATE)) {
             return new UpdateParser(tokenSequence, getFunctionEvaluator()).parse();
         }
         error(AstROErrorReporterDelegate.CURD_unknow_syntax_PARSE);

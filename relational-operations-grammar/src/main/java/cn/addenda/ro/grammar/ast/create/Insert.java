@@ -23,16 +23,17 @@ public class Insert extends Curd {
     private Curd curd;
 
     public Insert(Token constrict, Token tableName, Curd curd, InsertType insertType) {
+        this.constrict = constrict;
         this.tableName = tableName;
         this.curd = curd;
-        this.constrict = constrict;
         this.insertType = insertType;
+        onDuplicateUpdate = null;
     }
 
     public Insert(Token constrict, Token tableName, Curd curd, Curd onDuplicateUpdate, InsertType insertType) {
+        this.constrict = constrict;
         this.tableName = tableName;
         this.curd = curd;
-        this.constrict = constrict;
         this.onDuplicateUpdate = onDuplicateUpdate;
         this.insertType = insertType;
     }

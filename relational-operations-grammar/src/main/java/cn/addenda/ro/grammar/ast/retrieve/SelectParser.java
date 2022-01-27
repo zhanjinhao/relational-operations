@@ -59,7 +59,7 @@ public class SelectParser extends StatementParser {
     public Curd parse() {
         Select select = (Select) select();
         select.setSelectType(SelectType.VIEW);
-        saveSingleSelectContext(select, select, SingleSelectType.TOP);
+        saveSingleSelectContext(select, SingleSelectType.TOP);
         consume(TokenType.EOF, AstROErrorReporterDelegate.CURD_not_end_PARSE);
         select.accept(new SelectGrammarValidator(this.errorReporterDelegate));
         select.accept(new SelectAstMetaDataDetector(this.errorReporterDelegate));
@@ -270,7 +270,7 @@ public class SelectParser extends StatementParser {
      */
     protected Curd whereSeg() {
         Curd curd = super.whereSeg();
-        saveSingleSelectContext(curd, curd, SingleSelectType.PRIMARY);
+        saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
         return curd;
     }
 
@@ -409,7 +409,7 @@ public class SelectParser extends StatementParser {
     protected Curd comparison() {
         Curd curd = super.comparison();
         if (curd instanceof Comparison) {
-            saveSingleSelectContext(curd, curd, SingleSelectType.PRIMARY);
+            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
         }
         return curd;
     }
@@ -422,7 +422,7 @@ public class SelectParser extends StatementParser {
     protected Curd binaryArithmetic() {
         Curd curd = super.binaryArithmetic();
         if (curd instanceof BinaryArithmetic) {
-            saveSingleSelectContext(curd, curd, SingleSelectType.PRIMARY);
+            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
         }
         return curd;
     }
@@ -435,7 +435,7 @@ public class SelectParser extends StatementParser {
     protected Curd unaryArithmetic() {
         Curd curd = super.unaryArithmetic();
         if (curd instanceof UnaryArithmetic) {
-            saveSingleSelectContext(curd, curd, SingleSelectType.PRIMARY);
+            saveSingleSelectContext(curd, SingleSelectType.PRIMARY);
         }
         return curd;
     }

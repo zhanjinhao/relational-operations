@@ -29,8 +29,7 @@ public class TableSeg extends Binary {
         this.condition = condition;
     }
 
-    public TableSeg(Token qualifier, Curd leftCurd, Token token,
-                    Curd rightCurd) {
+    public TableSeg(Token qualifier, Curd leftCurd, Token token, Curd rightCurd) {
         super(leftCurd, token, rightCurd);
         this.qualifier = qualifier;
     }

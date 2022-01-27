@@ -11,11 +11,6 @@ public class SingleSelect extends Curd {
 
     private SingleSelectType singleSelectType = SingleSelectType.UNDETERMINED;
 
-    /**
-     * 表示此表是什么类型的表：顶层的select、inCondition、existsCondition或真实表
-     */
-    private Curd parentCurd;
-
     private Curd columnSeg;
 
     private Curd tableSeg;
@@ -36,14 +31,6 @@ public class SingleSelect extends Curd {
         this.groupBySeg = groupBySeg;
         this.orderBySeg = orderBySeg;
         this.limitSeg = limitSeg;
-    }
-
-    public Object getParentSelectStatement() {
-        return parentCurd;
-    }
-
-    public void setParentSelectStatement(Curd parentCurd) {
-        this.parentCurd = parentCurd;
     }
 
     public SingleSelectType getSingleSelectType() {

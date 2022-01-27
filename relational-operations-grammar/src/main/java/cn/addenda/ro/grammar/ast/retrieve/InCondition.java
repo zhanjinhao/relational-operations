@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class InCondition extends Curd {
 
+    // in or not
     private Token in;
 
     private Token identifier;

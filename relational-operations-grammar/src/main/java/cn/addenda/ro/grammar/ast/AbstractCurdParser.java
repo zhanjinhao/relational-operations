@@ -45,31 +45,30 @@ public abstract class AbstractCurdParser implements Parser<Curd>, ROErrorReporte
         errorReporterDelegate.error(errorCode);
     }
 
-    protected void saveSingleSelectContext(Curd curd, Curd parent, SingleSelectType type) {
+    protected void saveSingleSelectContext(Curd curd, SingleSelectType type) {
         if (curd instanceof SingleSelect) {
             SingleSelect singleSelect = (SingleSelect) curd;
             if (singleSelect.getSingleSelectType() == null || singleSelect.getSingleSelectType() == SingleSelectType.UNDETERMINED) {
                 singleSelect.setSingleSelectType(type);
-                singleSelect.setParentSelectStatement(parent);
             }
         } else if (curd instanceof Select) {
             Select select = (Select) curd;
-            saveSingleSelectContext(select.getLeftCurd(), select, type);
-            saveSingleSelectContext(select.getRightCurd(), select, type);
+            saveSingleSelectContext(select.getLeftCurd(), type);
+            saveSingleSelectContext(select.getRightCurd(), type);
         } else if (curd instanceof BinaryArithmetic) {
             BinaryArithmetic binaryArithmetic = (BinaryArithmetic) curd;
-            saveSingleSelectContext(binaryArithmetic.getLeftCurd(), binaryArithmetic, type);
-            saveSingleSelectContext(binaryArithmetic.getRightCurd(), binaryArithmetic, type);
+            saveSingleSelectContext(binaryArithmetic.getLeftCurd(), type);
+            saveSingleSelectContext(binaryArithmetic.getRightCurd(), type);
         } else if (curd instanceof UnaryArithmetic) {
             UnaryArithmetic unaryArithmetic = (UnaryArithmetic) curd;
-            saveSingleSelectContext(unaryArithmetic.getCurd(), unaryArithmetic, type);
+            saveSingleSelectContext(unaryArithmetic.getCurd(), type);
         } else if (curd instanceof Comparison) {
             Comparison comparison = (Comparison) curd;
-            saveSingleSelectContext(comparison.getLeftCurd(), comparison, type);
-            saveSingleSelectContext(comparison.getRightCurd(), comparison, type);
+            saveSingleSelectContext(comparison.getLeftCurd(), type);
+            saveSingleSelectContext(comparison.getRightCurd(), type);
         } else if (curd instanceof WhereSeg) {
             WhereSeg whereSeg = (WhereSeg) curd;
-            saveSingleSelectContext(whereSeg.getLogic(), curd, type);
+            saveSingleSelectContext(whereSeg.getLogic(), type);
         }
     }
 

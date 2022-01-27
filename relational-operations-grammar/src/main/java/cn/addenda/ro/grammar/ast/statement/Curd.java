@@ -3,6 +3,7 @@ package cn.addenda.ro.grammar.ast.statement;
 import cn.addenda.ro.grammar.ast.AstMetaData;
 import cn.addenda.ro.grammar.ast.CurdPrinter;
 import cn.addenda.ro.grammar.ast.CurdVisitor;
+import cn.addenda.ro.grammar.ast.DeepCloneVisitor;
 
 /**
  * @Author ISJINHAO
@@ -13,6 +14,8 @@ public abstract class Curd {
     private final AstMetaData astMetaData = new AstMetaData();
 
     private final CurdPrinter curdPrinter = new CurdPrinter();
+
+    private static final DeepCloneVisitor deepCloneVisitor = new DeepCloneVisitor();
 
     public Curd() {
         astMetaData.setCurd(this);
@@ -29,5 +32,8 @@ public abstract class Curd {
         return astMetaData;
     }
 
+    public Curd deepClone() {
+        return this.accept(deepCloneVisitor);
+    }
 
 }

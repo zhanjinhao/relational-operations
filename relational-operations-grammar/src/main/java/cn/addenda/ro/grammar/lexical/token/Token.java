@@ -33,9 +33,9 @@ public class Token implements ROError {
     @Override
     public String toString() {
         return "Token {" +
-            "type: " + type +
-            ", literal: \"" + literal +
-            "\"}";
+                "type: " + type +
+                ", literal: \"" + literal +
+                "\"}";
     }
 
     public TokenType getType() {
@@ -68,5 +68,8 @@ public class Token implements ROError {
                 this.type.equals(TokenType.FALSE) || this.type.equals(TokenType.TRUE) || this.type.equals(TokenType.NULL));
     }
 
+    public Token deepClone() {
+        return new Token(this.getType(), this.getLiteral(), this.getIndex());
+    }
 
 }

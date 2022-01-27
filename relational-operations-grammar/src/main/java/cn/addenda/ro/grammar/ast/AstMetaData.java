@@ -306,4 +306,18 @@ public class AstMetaData {
         }
     }
 
+    public Set<String> getTableNameSet() {
+        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
+        strings.remove(UNDETERMINED_TABLE);
+        Set<String> aliasSet = aliasTableMap.keySet();
+        strings.removeAll(aliasSet);
+        return strings;
+    }
+
+    public Set<String> getViewNameSet() {
+        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
+        strings.remove(UNDETERMINED_TABLE);
+        return strings;
+    }
+
 }
