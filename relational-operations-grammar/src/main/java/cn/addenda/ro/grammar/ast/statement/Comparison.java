@@ -8,7 +8,7 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
  */
 public class Comparison extends Binary {
 
-    private final Curd comparisonSymbol;
+    private Curd comparisonSymbol;
 
     public Comparison(Curd leftCurd, Curd comparisonSymbol,
                       Curd rightCurd) {

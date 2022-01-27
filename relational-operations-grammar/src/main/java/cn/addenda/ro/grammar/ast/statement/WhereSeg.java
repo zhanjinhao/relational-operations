@@ -9,7 +9,7 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
  */
 public class WhereSeg extends Curd {
 
-    private final Curd logic;
+    private Curd logic;
 
     public WhereSeg(Curd logic) {
         this.logic = logic;

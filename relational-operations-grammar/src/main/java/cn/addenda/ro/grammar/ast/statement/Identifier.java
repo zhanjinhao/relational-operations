@@ -18,7 +18,7 @@ public class Identifier extends Curd {
         return curdVisitor.visitIdentifier(this);
     }
 
-    private final Token name;
+    private Token name;
 
     public Token getName() {
         return name;

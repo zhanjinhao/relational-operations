@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class AssignmentList extends Curd {
 
-    private final List<Entry> entryList;
+    private List<Entry> entryList;
 
     public AssignmentList(List<Entry> entryList) {
         this.entryList = entryList;

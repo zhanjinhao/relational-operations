@@ -8,11 +8,11 @@ import cn.addenda.ro.grammar.lexical.token.Token;
  */
 public abstract class Binary extends Curd {
 
-    private final Curd leftCurd;
+    private Curd leftCurd;
 
-    private final Token token;
+    private Token token;
 
-    private final Curd rightCurd;
+    private Curd rightCurd;
 
     public Binary(Curd leftCurd, Token token, Curd rightCurd) {
         this.leftCurd = leftCurd;

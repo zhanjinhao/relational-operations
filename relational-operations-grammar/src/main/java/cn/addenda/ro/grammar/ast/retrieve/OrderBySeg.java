@@ -29,8 +29,8 @@ public class OrderBySeg extends Curd {
 
     public static class OrderItem {
 
-        private final Token column;
-        private final Token orderType;
+        private Token column;
+        private Token orderType;
 
         public OrderItem(Token column, Token orderType) {
             this.column = column;

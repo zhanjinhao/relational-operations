@@ -18,7 +18,7 @@ public class Literal extends Curd {
         return expressionVisitor.visitLiteral(this);
     }
 
-    private final Token value;
+    private Token value;
 
     public Token getValue() {
         return value;

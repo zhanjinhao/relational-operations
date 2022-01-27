@@ -9,9 +9,9 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
  */
 public class TimeInterval extends Curd {
 
-    private final Token timeType;
+    private Token timeType;
 
-    private final Long interval;
+    private Long interval;
 
     public TimeInterval(Token timeType, Long interval) {
         this.timeType = timeType;

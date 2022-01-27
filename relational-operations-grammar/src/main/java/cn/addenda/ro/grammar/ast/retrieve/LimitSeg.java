@@ -11,10 +11,10 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
 public class LimitSeg extends Curd {
 
     // 需要取的值
-    private final Token num;
+    private Token num;
 
     // 跳过的数量
-    private final Token offset;
+    private Token offset;
 
     public LimitSeg(Token num, Token offset) {
         this.num = num;

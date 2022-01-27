@@ -10,9 +10,9 @@ import cn.addenda.ro.grammar.ast.CurdVisitor;
  */
 public class GroupFunction extends Curd {
 
-    private final Token method;
+    private Token method;
 
-    private final Curd curd;
+    private Curd curd;
 
     public GroupFunction(Token method, Curd curd) {
         this.method = method;

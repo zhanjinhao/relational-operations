@@ -9,9 +9,9 @@ import cn.addenda.ro.grammar.lexical.token.Token;
  */
 public class IsNot extends Curd {
 
-    private final Token isToken;
+    private Token isToken;
 
-    private final Token notToken;
+    private Token notToken;
 
     public IsNot(Token isToken, Token notToken) {
         this.isToken = isToken;

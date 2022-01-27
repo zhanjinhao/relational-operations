@@ -8,8 +8,8 @@ import cn.addenda.ro.grammar.lexical.token.Token;
  */
 public abstract class Unary extends Curd {
 
-    private final Token operator;
-    private final Curd curd;
+    private Token operator;
+    private Curd curd;
 
     public Unary(Token operator, Curd curd) {
         this.operator = operator;

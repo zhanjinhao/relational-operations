@@ -12,7 +12,7 @@ import cn.addenda.ro.grammar.ast.statement.Binary;
 public class TableSeg extends Binary {
 
     // cross or left or right or null
-    private final Token qualifier;
+    private Token qualifier;
 
     // join or ,
 //    private Token token;
