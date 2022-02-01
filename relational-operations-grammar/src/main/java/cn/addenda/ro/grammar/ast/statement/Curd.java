@@ -1,9 +1,9 @@
 package cn.addenda.ro.grammar.ast.statement;
 
-import cn.addenda.ro.grammar.ast.AstMetaData;
-import cn.addenda.ro.grammar.ast.CurdPrinter;
-import cn.addenda.ro.grammar.ast.CurdVisitor;
-import cn.addenda.ro.grammar.ast.DeepCloneVisitor;
+import cn.addenda.ro.grammar.ast.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author ISJINHAO
@@ -16,6 +16,8 @@ public abstract class Curd {
     private final CurdPrinter curdPrinter = new CurdPrinter();
 
     private static final DeepCloneVisitor deepCloneVisitor = new DeepCloneVisitor();
+
+    private static final Map<String, IdentifierFillTNVisitor> tNToIdentifierFillTNMap = new HashMap<>();
 
     public Curd() {
         astMetaData.setCurd(this);
@@ -34,6 +36,15 @@ public abstract class Curd {
 
     public Curd deepClone() {
         return this.accept(deepCloneVisitor);
+    }
+
+    public void fillTableName(String tableName) {
+        IdentifierFillTNVisitor identifierFillTNVisitor = tNToIdentifierFillTNMap.get(tableName);
+        if (identifierFillTNVisitor == null) {
+            identifierFillTNVisitor = new IdentifierFillTNVisitor(tableName);
+            tNToIdentifierFillTNMap.put(tableName, identifierFillTNVisitor);
+        }
+        this.accept(identifierFillTNVisitor);
     }
 
 }

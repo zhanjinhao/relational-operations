@@ -14,7 +14,7 @@ public class Token implements ROError {
     /**
      * 存 number、string、true、false、null
      */
-    private final Object literal;
+    private Object literal;
 
     private int index = -1;
 

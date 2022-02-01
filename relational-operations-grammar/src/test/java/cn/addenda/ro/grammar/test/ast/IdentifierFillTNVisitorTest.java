@@ -7,9 +7,9 @@ import cn.addenda.ro.grammar.function.evaluator.DefaultFunctionEvaluator;
 
 /**
  * @Author ISJINHAO
- * @Date 2022/1/27 15:40
+ * @Date 2022/2/1 14:24
  */
-public class CloneTest {
+public class IdentifierFillTNVisitorTest {
 
     static String[] sqls = new String[]{
 
@@ -242,9 +242,11 @@ public class CloneTest {
             "delete from score where DEGREE + 1 < 60 - 1",
             "delete from score where CREATE_TM < now() and DEGREE + 1 < 60 - 1",
             "delete from score"
+
     };
 
     public static void main(String[] args) {
+
 
         for (String sql : sqls) {
             CurdParser curdParser = CurdParserFactory.createCurdParser(sql, DefaultFunctionEvaluator.getInstance());
@@ -252,6 +254,7 @@ public class CloneTest {
             Curd curd = curdParser.parse();
             Curd deepClone = curd.deepClone();
 
+            deepClone.fillTableName("HAHAHAHAHAHA");
             String s1 = curd.toString().replaceAll("\\s+", "");
             String s2 = deepClone.toString().replaceAll("\\s+", "");
 
@@ -264,6 +267,7 @@ public class CloneTest {
             }
 
         }
+
     }
 
 }
