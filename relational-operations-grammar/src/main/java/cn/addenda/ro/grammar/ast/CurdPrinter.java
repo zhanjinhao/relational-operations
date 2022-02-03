@@ -400,7 +400,7 @@ public class CurdPrinter implements CurdVisitor<String> {
     public String visitInsertSetRep(InsertSetRep insertSetRep) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("set").append(BLANK);
+        sb.append(BLANK).append("set").append(BLANK);
 
         Curd entryList = insertSetRep.getEntryList();
         String accept = entryList.accept(this);

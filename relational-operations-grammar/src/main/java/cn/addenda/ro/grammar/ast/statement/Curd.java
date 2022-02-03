@@ -4,6 +4,7 @@ import cn.addenda.ro.grammar.ast.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @Author ISJINHAO
@@ -47,4 +48,15 @@ public abstract class Curd {
         this.accept(identifierFillTNVisitor);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return Objects.equals(toString().replaceAll("\\s+", " "), o.toString().replaceAll("\\s+", " "));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(toString().replaceAll("\\s+", ""));
+    }
 }

@@ -1,6 +1,7 @@
 package cn.addenda.ro.grammar.ast;
 
 import cn.addenda.ro.grammar.ast.statement.Curd;
+import cn.addenda.ro.grammar.ast.statement.Identifier;
 import cn.addenda.ro.grammar.lexical.token.Token;
 
 import java.util.*;
@@ -306,20 +307,6 @@ public class AstMetaData {
         }
     }
 
-    public Set<String> getTableNameSet() {
-        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
-        strings.remove(UNDETERMINED_TABLE);
-        Set<String> aliasSet = aliasTableMap.keySet();
-        strings.removeAll(aliasSet);
-        return strings;
-    }
-
-    public Set<String> getViewNameSet() {
-        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
-        strings.remove(UNDETERMINED_TABLE);
-        return strings;
-    }
-
     public boolean checkViewExists(String viewName) {
         Set<String> strings = conditionColumnReference.keySet();
         return strings.contains(viewName);
@@ -334,5 +321,42 @@ public class AstMetaData {
         }
         return null;
     }
+
+    /**
+     * from A  ->  A
+     * from A a  ->  a
+     * from (select a from A) B  ->  null
+     */
+    public Set<String> getAvailableTableNameSet() {
+        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
+        strings.remove(UNDETERMINED_TABLE);
+
+        // 查出来所有的不需要执行的
+        Set<String> needRemove = new HashSet<>();
+        Set<Map.Entry<String, Curd>> entries = aliasTableMap.entrySet();
+        Iterator<Map.Entry<String, Curd>> iterator = entries.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Curd> next = iterator.next();
+            if (!next.getValue().getClass().equals(Identifier.class)) {
+                needRemove.add(next.getKey());
+            }
+        }
+
+        strings.removeAll(needRemove);
+
+        return strings;
+    }
+
+    /**
+     * from A  ->  A
+     * from A a  ->  a
+     * from (select a from A) B  ->  B
+     */
+    public Set<String> getAvailableViewNameSet() {
+        Set<String> strings = new HashSet<>(conditionColumnReference.keySet());
+        strings.remove(UNDETERMINED_TABLE);
+        return strings;
+    }
+
 
 }
